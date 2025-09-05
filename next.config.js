@@ -2,6 +2,10 @@
 import "./src/env.js";
 
 /** @type {import("next").NextConfig} */
-const config = {};
+const config = {
+    turbopack: {
+        root: "./" 
+      }
+};
 
 export default config;
