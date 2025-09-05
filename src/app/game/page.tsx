@@ -10,16 +10,6 @@ import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { cn } from '@/lib/utils';
-
-/**
- * Responsive, mobile‑first version of the GamePage
- * – Larger tap targets on mobile
- * – Sticky top meta bar (topic/theme) and mobile bottom action bar
- * – Safe‑area padding on iOS (env(safe-area-inset-*))
- * – Reduced motion & pointer‑coarse tweaks
- * – Accessible labels and roles
- */
-
 type SelectionMap = Record<number, number>;
 
 export default function GamePage() {
@@ -49,7 +39,7 @@ export default function GamePage() {
     if (typeof window === 'undefined') return false;
     const doc = document.documentElement;
     const scrolled = window.scrollY + window.innerHeight;
-    const threshold = doc.scrollHeight - 240; // a bit more room for mobile toolbars
+    const threshold = doc.scrollHeight - 240;
     return scrolled >= threshold;
   }, []);
 
@@ -63,7 +53,6 @@ export default function GamePage() {
 
   const fireConfetti = React.useCallback(
     async (x = 0.5, y = 0.35) => {
-      // Skip confetti for users who prefer reduced motion
       if (prefersReducedMotion) return;
       try {
         // @ts-ignore
@@ -94,7 +83,6 @@ export default function GamePage() {
     if (turns.length > 0) return;
     setPendingStage(1);
     submit({ topic, theme, stage: 1, maxStages: maxStagesFromUrl });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [topic, theme, maxStagesFromUrl]);
 
   React.useEffect(() => {
@@ -191,7 +179,6 @@ export default function GamePage() {
         disabled={!interactive || (interactive && picked !== undefined) || isLoading}
         variant="outline"
         className={cn(
-          // Mobile‑first: large touch target, readable mono label
           'justify-start text-left transition-transform font-mono tracking-wide hover:bg-muted',
           'w-full min-h-12 sm:min-h-10 py-3 sm:py-2 text-sm sm:text-base',
           'rounded-xl sm:rounded-lg',
@@ -319,7 +306,6 @@ export default function GamePage() {
                     <p className="whitespace-pre-wrap leading-relaxed text-[15px] sm:text-base">{turn.story ?? ''}</p>
                   )}
 
-                  {/* Options — single column on mobile for readability, 2 cols on >=sm for faster scanning */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
                     {(turn.options ?? []).map((_, idx) =>
                       renderOption(
@@ -371,7 +357,6 @@ export default function GamePage() {
 
         <div ref={endOfThreadRef} className="h-px scroll-mt-24" aria-hidden />
 
-        {/* Desktop controls already in the sticky bar; show compact footer actions on mobile */}
         <div className="sm:hidden fixed inset-x-0 bottom-0 z-30 border-t border-border/60 bg-background/90 supports-[backdrop-filter]:backdrop-blur px-4 py-2 pb-[max(env(safe-area-inset-bottom),0.5rem)]">
           <div className="mx-auto max-w-4xl flex items-center gap-2">
             {isLoading && (
@@ -387,7 +372,6 @@ export default function GamePage() {
         </div>
       </div>
 
-      {/* Global minor animation keyframes */}
       <style jsx global>{`
         @media (prefers-reduced-motion: no-preference) {
           @keyframes sq-shake {
