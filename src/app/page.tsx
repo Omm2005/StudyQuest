@@ -1,10 +1,18 @@
-import { auth } from "@/server/auth";
-import { redirect } from "next/navigation";
+import QueryComponent from '@/components/QueryComponent'
+import { auth } from '@/server/auth'
+import LoginComponent from '@/components/LoginComponent'
+import React from 'react'
 
-export default async function Page() {
+type Props = {}
+
+const Page = async(props: Props) => {
   const session = await auth()
   if(!session) {
-    redirect("/login");
+    return <LoginComponent />
   }
-  redirect("/home");
+  return (
+    <QueryComponent />
+  )
 }
+
+export default Page

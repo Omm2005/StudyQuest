@@ -3,6 +3,9 @@ import { ThemeProvider } from "@/components/theme-provider"
 
 import { type Metadata } from "next";
 import { Roboto_Mono } from "next/font/google";
+import { Navbar } from "@/components/Navbar";
+import { auth } from "@/server/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -17,16 +20,24 @@ const robotoMono = Roboto_Mono({
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+const session = await auth()
+
   return (
     <html lang="en" className={`${robotoMono.variable}`} suppressHydrationWarning>
-      <body>
+      <body className="min-h-screen h-screen w-screen flex flex-col bg-background text-foreground antialiased">
                   <ThemeProvider
             attribute="class"
             defaultTheme="system"
             enableSystem
             disableTransitionOnChange
           >
-                      {children}
+
+            {session && (
+              <Navbar
+              user={{ name: session?.user?.name, email: session?.user?.email, image: session?.user?.image }}
+              />
+            )}
+        {children}
             </ThemeProvider>
 </body>
     </html>
