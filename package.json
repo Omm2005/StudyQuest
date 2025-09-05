@@ -21,6 +21,7 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@ai-sdk/google": "^2.0.12",
     "@ai-sdk/openai": "^2.0.24",
     "@auth/prisma-adapter": "^2.7.2",
     "@prisma/client": "^6.5.0",
