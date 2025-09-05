@@ -5,7 +5,6 @@ import { type Metadata } from "next";
 import { Roboto_Mono } from "next/font/google";
 import { Navbar } from "@/components/Navbar";
 import { auth } from "@/server/auth";
-import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -15,6 +14,7 @@ export const metadata: Metadata = {
 
 const robotoMono = Roboto_Mono({
   variable: "--font-roboto-mono",
+  subsets: ["latin"],
 });
 
 export default async function RootLayout({

@@ -1,30 +1,110 @@
-# Create T3 App
+# StudyQuest
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A web-based text adventure game powered by Next.js, Prisma, Neon.tech, and AI integrations.
 
-## What's next? How do I make an app with this?
+---
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+## 🚀 Getting Started
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+### 1. **Clone the repository**
+```sh
+git clone https://github.com/Omm2005/text-game-hackathon/
+cd text-game-hackathon
+```
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### 2. **Install dependencies**
+```sh
+npm install
+```
+Or, if you use Bun:
+```sh
+bun install
+```
 
-## Learn More
+### 3. **Configure environment variables**
+- Copy `.env.example` to `.env`:
+  ```sh
+  cp .env.example .env
+  ```
+- Fill in your secrets:
+  - `AUTH_SECRET`: Generate with `npx next-auth secret`
+  - `AUTH_GOOGLE_ID` and `AUTH_GOOGLE_SECRET`: Get from [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+  - `DATABASE_URL`: Your PostgreSQL connection string (Neon.tech recommended)
+  - `OPENAI_API_KEY`: Get from [OpenAI](https://platform.openai.com/) //if you want OpenAI
+  - `GOOGLE_GENERATIVE_AI_API_KEY`: Get from [Google AI Studio](https://aistudio.google.com/)
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### 4. **Set up the database**
+If you use [Neon.tech](https://neon.tech/):
+- Create a Neon project and database.
+- Copy your Neon connection string to `DATABASE_URL` in `.env`.
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+else
+run ```./start-database.sh``` for Docker
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+Then run:
+```sh
+npx prisma migrate dev
+```
 
-## How do I deploy this?
+### 5. **Start the development server**
+```sh
+npm run dev
+```
+Or with Bun:
+```sh
+bun run dev
+```
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
-# text-game-hackathon
+---
+
+## 🛠️ Tech Stack
+
+- **Next.js** – React framework for web apps
+- **Prisma** – ORM for PostgreSQL
+- **Neon.tech** – Serverless PostgreSQL database
+- **NextAuth.js** – Authentication (Google, Discord, etc.)
+- **OpenAI & Google Generative AI** – AI-powered game logic
+- **Vercel AI SDK** - For streaming the Ai chat and changing between AIs.
+
+---
+
+## 📁 Project Structure
+
+```
+src/
+  ├── pages/         # Next.js pages
+  ├── components/    # React components
+  ├── lib/           # Utility functions
+  ├── prisma/        # Prisma schema
+  └── env.js         # Environment variable schema
+```
+
+---
+
+## 🧑‍💻 Contributing
+
+1. Fork the repo
+2. Create your feature branch (`git checkout -b feature/foo`)
+3. Commit your changes
+4. Push to the branch
+5. Open a pull request
+
+---
+
+## 📄 License
+
+MIT
+
+---
+
+## 🙋‍♂️ Troubleshooting
+
+- **Database errors:** Check your `DATABASE_URL` and ensure your database is running (Neon.tech recommended).
+- **Auth errors:** Make sure your Google/Discord credentials are correct and set in `.env`.
+- **CSRF errors:** Clear cookies, use the correct domain/port, and restart your server.
+
+---
+
+## 📬 Contact
+
+For questions, open an issue

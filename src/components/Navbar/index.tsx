@@ -3,7 +3,7 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { redirect, usePathname } from 'next/navigation';
-import { Menu, LogOut, Settings, User } from 'lucide-react';
+import { LogOut, Settings, User } from 'lucide-react';
 import { ThemeToggle } from '@/components/Navbar/theme-toggle';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -15,16 +15,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from '@/components/ui/sheet';
 import { Badge } from '@/components/ui/badge';
-import { cn } from '@/lib/utils';
-import { signOut } from '@/server/auth';
 import SignOutOption from '@/server/auth/SignOutOption';
 
 type UserInfo = {
@@ -95,7 +86,7 @@ export function Navbar({ user }: NavbarProps) {
             </DropdownMenuTrigger>
             <DropdownMenuContent
               align="end"
-              className="w-56" // uses bg-popover, text-popover-foreground, border-border by default
+              className="w-56"
             >
               <DropdownMenuLabel className="text-xs text-muted-foreground">
                 {user?.name || user?.email || 'Guest'}

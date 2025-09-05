@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
   DropdownMenuLabel,
   DropdownMenuSeparator,
@@ -26,19 +25,16 @@ export function ThemeToggle() {
           className="relative h-9 px-2"
           aria-label="Toggle theme"
         >
-          {/* Sun/Moon icon swap */}
           <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
           <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
           <span className="sr-only">Toggle theme</span>
         </Button>
       </DropdownMenuTrigger>
 
-      {/* Uses shadcn tokens by default: bg-popover, text-popover-foreground, border-border */}
       <DropdownMenuContent align="end" className="w-44">
         <DropdownMenuLabel className="text-xs text-muted-foreground">THEME</DropdownMenuLabel>
         <DropdownMenuSeparator />
 
-        {/* Accessible radio group with current selection */}
         <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
           <DropdownMenuRadioItem
             value="light"

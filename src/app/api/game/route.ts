@@ -1,4 +1,3 @@
-// /app/api/game/route.ts
 import { google } from '@ai-sdk/google';
 import { streamObject } from 'ai';
 import { GameTurnSchema, GameRequestSchema, type GameRequest } from './schema';
@@ -13,16 +12,10 @@ export async function POST(req: Request) {
 
   const { topic, theme, stage, selectedIndex, lastTurn, maxStages } = parsed;
 
-  // Was the previous turn answered correctly?
   const answerWasCorrect =
     typeof selectedIndex === 'number' && lastTurn
-      // @ts-ignore server knows lastTurn.correctIndex
       ? selectedIndex === lastTurn.correctIndex
       : undefined;
-
-  // 🔁 Change: ending is a SEPARATE stage after the last question stage.
-  // The last *question stage* is exactly maxStages.
-  // The next stage (maxStages + 1) is the pure ending stage.
   const isEndingStage = stage > maxStages;
 
   const system = `
@@ -50,7 +43,6 @@ Branching logic:
 Never include extra fields or text outside JSON.
 `.trim();
 
-  // Build user prompt with continuity
   const user = `
 Topic: ${topic}
 Theme: ${theme}
@@ -84,7 +76,6 @@ Player selected index: ${selectedIndex}`
     system,
     prompt: user,
     temperature: 0.7,
-    // (optional) you can set maxTokens/stop if you want tighter control
   });
 
   return result.toTextStreamResponse();
