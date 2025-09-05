@@ -1,7 +1,11 @@
 import "@/styles/globals.css";
+import { ThemeProvider } from "@/components/theme-provider"
 
 import { type Metadata } from "next";
-import { Geist } from "next/font/google";
+import { Roboto_Mono } from "next/font/google";
+import { Navbar } from "@/components/Navbar";
+import { auth } from "@/server/auth";
+import { redirect } from "next/navigation";
 
 export const metadata: Metadata = {
   title: "Create T3 App",
@@ -9,17 +13,33 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: "/favicon.ico" }],
 };
 
-const geist = Geist({
-  subsets: ["latin"],
-  variable: "--font-geist-sans",
+const robotoMono = Roboto_Mono({
+  variable: "--font-roboto-mono",
 });
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
+const session = await auth()
+
   return (
-    <html lang="en" className={`${geist.variable}`}>
-      <body>{children}</body>
+    <html lang="en" className={`${robotoMono.variable}`} suppressHydrationWarning>
+      <body className="min-h-screen h-screen w-screen flex flex-col bg-background text-foreground antialiased">
+                  <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+
+            {session && (
+              <Navbar
+              user={{ name: session?.user?.name, email: session?.user?.email, image: session?.user?.image }}
+              />
+            )}
+        {children}
+            </ThemeProvider>
+</body>
     </html>
   );
 }
