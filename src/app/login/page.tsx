@@ -28,7 +28,7 @@ export default function Page() {
 
   const onGoogle = () =>
     startTransition(() => {
-      void signIn("google", { callbackUrl: "/" })
+      void signIn("google", { callbackUrl: "/home" })
     })
 
   return (
