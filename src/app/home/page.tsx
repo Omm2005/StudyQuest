@@ -1,9 +1,15 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-member-access */
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 'use client';
 
 import * as React from 'react';
 import { experimental_useObject as useObject } from '@ai-sdk/react';
 import { z } from 'zod';
 import { GameTurnSchema } from '../api/game/schema';
+import { useSession, signOut } from 'next-auth/react';
 
 const ClientTurnSchema = GameTurnSchema; // for typing on the client
 
@@ -15,6 +21,9 @@ export default function Page() {
   const [lastTurnSnapshot, setLastTurnSnapshot] = React.useState<
     z.infer<typeof ClientTurnSchema> | undefined
   >(undefined);
+
+  const { data: session } = useSession();
+  const userName = session?.user?.name ?? session?.user?.email ?? 'User';
 
   const { object, submit, isLoading, stop, error } = useObject({
     api: '/api/game',
@@ -60,6 +69,24 @@ export default function Page() {
 
   return (
     <main style={{ maxWidth: 760, margin: '40px auto', padding: 16 }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+        <div style={{ fontWeight: 600 }}>Welcome, {userName}</div>
+        {!!session && (
+          <button
+            onClick={() => signOut({ callbackUrl: '/login' })}
+            style={{
+              padding: '8px 12px',
+              borderRadius: 8,
+              border: '1px solid #ddd',
+              background: 'bg-background',
+              cursor: 'pointer',
+            }}
+          >
+            Sign out
+          </button>
+        )}
+      </div>
+
       <h1 style={{ fontSize: 28, fontWeight: 700, marginBottom: 8 }}>
         StoryQuest — Streaming Branching Quiz
       </h1>
