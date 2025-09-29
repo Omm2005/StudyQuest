@@ -1,0 +1,100 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    # Spin up a Postgres DB for Prisma migrations
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: studyquest
+          POSTGRES_PASSWORD: studyquest
+          POSTGRES_DB: studyquest
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready -U studyquest -d studyquest"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      # Prisma connection string to the service DB
+      DATABASE_URL: postgresql://studyquest:studyquest@localhost:5432/studyquest?schema=public
+      # Provide these via GitHub Secrets if your build or e2e needs them
+      AUTH_SECRET: ${{ secrets.AUTH_SECRET || 'dev-secret-for-ci-only' }}
+      AUTH_GOOGLE_ID: ${{ secrets.AUTH_GOOGLE_ID || '' }}
+      AUTH_GOOGLE_SECRET: ${{ secrets.AUTH_GOOGLE_SECRET || '' }}
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY || '' }}
+      GOOGLE_GENERATIVE_AI_API_KEY: ${{ secrets.GOOGLE_GENERATIVE_AI_API_KEY || '' }}
+      # Next.js: treat missing envs as warnings during build
+      NEXT_TELEMETRY_DISABLED: "1"
+      NODE_ENV: "test"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+
+      - name: Generate Prisma client
+        run: bunx prisma generate
+
+      - name: Wait for Postgres
+        run: |
+          for i in {1..30}; do
+            pg_isready -h 127.0.0.1 -p 5432 -U studyquest -d studyquest && break
+            sleep 2
+          done
+
+      - name: Run Prisma migrations
+        run: bunx prisma migrate deploy
+
+      # Uncomment if you add a seed script
+      # - name: Seed database
+      #   run: bun run seed
+
+      - name: Lint
+        run: |
+          if bun run | grep -q "\"lint\""; then
+            bun run lint
+          else
+            echo "No lint script; skipping."
+          fi
+
+      - name: Typecheck
+        run: |
+          if bun run | grep -q "\"typecheck\""; then
+            bun run typecheck
+          else
+            # Fallback to tsc --noEmit if you don't have a script
+            if [ -f tsconfig.json ]; then
+              bunx tsc --noEmit
+            else
+              echo "No tsconfig; skipping typecheck."
+            fi
+          fi
+
+      - name: Build (Next.js)
+        run: bun run build
+
+      - name: Run unit tests (if present)
+        run: |
+          if bun run | grep -q "\"test\""; then
+            bun run test -- --ci --reporters=default
+          else
+            echo "No test script; skipping."
+          fi
