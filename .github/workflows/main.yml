@@ -89,7 +89,7 @@ jobs:
           fi
 
       - name: Build (Next.js)
-        run: bun run build
+        run: SKIP_ENV_VALIDATION=1 bun run build
 
       - name: Run unit tests (if present)
         run: |
