@@ -79,7 +79,7 @@ src/
   └── env.js         # Environment variable schema
 ```
 
----
+----
 
 ## 🧑‍💻 Contributing
 
